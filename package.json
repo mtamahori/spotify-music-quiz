@@ -1,0 +1,11 @@
+{
+  "name": "spotify-music-quiz",
+  "version": "1.0.0",
+  "description": "A music quiz reminiscent of the legendary iPod game of yore.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Max Tamahori",
+  "license": "ISC"
+}
