@@ -9,23 +9,23 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
   <div className="navbar">
   {isLoggedIn ? (
     <Menu className="navbar-buttons" fluid widths={2}>
-      <Menu.Item as={Link} to="/game">Game</Menu.Item>
-      <Menu.Item onClick={handleClick} position="right">Logout While Logged In</Menu.Item>
+      <Menu.Item as={Link} to="/game">Play Game</Menu.Item>
+      <Menu.Item onClick={handleClick}>Logout</Menu.Item>
     </Menu>
   ) : (
 
     <Menu className="navbar-buttons" fluid widths={2}>
-    <Menu.Item onClick={handleClick} position="right">Logout Regardless</Menu.Item>
-    <Menu.Item as={Link} to="/landing">Landing</Menu.Item>
+    <Menu.Item as={Link} to="/">Landing</Menu.Item>
+    <Menu.Item as={Link} to="/login">Login</Menu.Item>
     </Menu>
   )}
   </div>
 )
 
 const mapState = state => {
-  // return {
-  //   isLoggedIn: !!state.user.id
-  // }
+  return {
+    isLoggedIn: !!state.user.id
+  }
 }
 
 const mapDispatch = dispatch => {

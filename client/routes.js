@@ -16,22 +16,23 @@ class Routes extends Component {
     return (
       <Switch>
         <Route exact path="/login" component={Login} />
-        <Route exact path="/game" component={Main} />
+
         {isLoggedIn && (
           <Switch>
             <Route exact path="/game" component={Main} />
           </Switch>
         )}
-        <Route exact path="/landing" component={Landing} />
+
+        <Route exact path="/" component={Landing} />
       </Switch>
     )
   }
 }
 
 const mapState = state => {
-  // return {
-  //   isLoggedIn: !!state.user.id
-  // }
+  return {
+    isLoggedIn: !!state.user.id
+  }
 }
 
 const mapDispatch = dispatch => {
