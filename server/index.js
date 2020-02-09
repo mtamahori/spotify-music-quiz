@@ -6,6 +6,7 @@ const session = require('express-session');
 const db = require ('./db');
 const SequelizeStore = require('connect-session-sequelize')(session.Store)
 const sessionStore = new SequelizeStore({db});
+const passport = require('passport');
 const PORT = process.env.PORT || 8080
 const app = express();
 module.exports = app;
@@ -17,12 +18,38 @@ if (process.env.NODE_ENV === 'test') {
 
 if (process.env.NODE_ENV !== 'production') require('../secrets')
 
+passport.serializeUser((user, done) => done(null, user.id))
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await db.models.user.findByPk(id)
+    done(null, user)
+  } catch (err) {
+    done(err)
+  }
+})
+
 const createApp = () => {
   app.use(morgan('dev'))
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({extended: true}))
+
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET || 'spotifymusicquiz',
+      store: sessionStore,
+      resave: false,
+      saveUninitialized: false
+    })
+  )
+
+  app.use(passport.initialize())
+  app.use(passport.session())
+
+  app.use('/auth', require('./auth'))
   app.use('/api', require('./api'))
+
   app.use(express.static(path.join(__dirname, '..', 'public')))
+
   app.use((req, res, next) => {
     if (path.extname(req.path).length) {
       const err = new Error('Not found')
@@ -32,9 +59,11 @@ const createApp = () => {
       next()
     }
   })
+
   app.use('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public/index.html'))
   })
+
   app.use((err, req, res, next) => {
     console.error(err)
     console.error(err.stack)

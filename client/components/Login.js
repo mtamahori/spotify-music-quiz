@@ -1,8 +1,11 @@
 import React from 'react';
+import { Button } from 'semantic-ui-react';
 
 const Login = () => (
   <div className="login">
-    <h3>LOG IN</h3>
+    <Button size="massive" href="/auth/spotify">
+      Log in with Spotify
+    </Button>
   </div>
 )
 

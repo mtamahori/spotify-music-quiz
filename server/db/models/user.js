@@ -13,7 +13,7 @@ const User = db.define('user', {
       return () => this.getDataValue('password')
     }
   },
-  spotifyId: {
+  spotifyUserId: {
     type: Sequelize.STRING
   }
 })
