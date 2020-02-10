@@ -44,10 +44,8 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
   passport.use(strategy)
 
   router.get('/', passport.authenticate('spotify', {
-    scope: ['user-read-email', 'user-read-private']
+    scope: ['user-read-email', 'user-read-private', 'user-read-playback-state', 'streaming', 'user-modify-playback-state', 'user-top-read', 'user-read-currently-playing', 'user-read-recently-played', 'user-library-read']
   }))
-
-  // router.get('/', passport.authenticate('spotify', {scope: ['user-read-email', 'user-read-private', 'playlist-read-private', 'playlist-read-collaborative', 'playlist-modify-public', 'playlist-modify-private', 'streaming', 'ugc-image-upload', 'user-follow-modify', 'user-follow-read', 'user-library-read', 'user-library-modify', 'user-read-private', 'user-read-birthdate', 'user-read-email', 'user-top-read', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing', 'user-read-recently-played' ] }))
 
   router.get('/callback', passport.authenticate('spotify', {
     successRedirect: '/game',

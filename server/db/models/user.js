@@ -7,12 +7,6 @@ const User = db.define('user', {
     unique: true,
     allowNull: false
   },
-  password: {
-    type: Sequelize.STRING,
-    get() {
-      return () => this.getDataValue('password')
-    }
-  },
   spotifyUserId: {
     type: Sequelize.STRING
   }
