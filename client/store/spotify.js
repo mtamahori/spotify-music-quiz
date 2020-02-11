@@ -1,5 +1,18 @@
 import axios from 'axios';
+import SpotifyWebApi from 'spotify-web-api-node';
 
+const spotifyApi = new SpotifyWebApi();
+
+// TOKEN HELPER FUNCTION
+
+// export const setSpotifyToken = () => {
+//   return axios.get('/api/spotify/refreshToken')
+//   .then(res => res.data)
+//   .then(token => {
+//     spotifyApi.setAccessToken(token)
+//     console.log('NEW TOKEN IN SPOTIFY STORE', token)
+//   })
+// }
 // DEFAULT
 
 const defaultTracks = {};
@@ -11,9 +24,6 @@ const UPDATE_TRACKS = 'UPDATE_TRACKS';
 const REMOVE_TRACKS = 'REMOVE_TRACKS';
 
 // ACTION CREATORS
-//getTracks to start game
-//updateTracks to continue to next round
-//removeTracks to end game
 
 const getTracks = (tracks) => ({ type: GET_TRACKS, tracks })
 const updateTracks = (tracks) => ({ type: UPDATE_TRACKS, tracks })
@@ -21,10 +31,13 @@ const removeTracks = () => ({ type: REMOVE_TRACKS })
 
 //THUNKS
 
-export const getRecentTracks = () => dispatch => {
+export const fetchTracks = () => dispatch => {
   axios
-    .get('/api/spotify/getRecentTracks')
-    .then(res => dispatch(getTracks(res.data)))
+    .get('/api/spotify/getTracks')
+    .then(res => {
+      console.log('SERVER RESPONSE', res)
+      dispatch(getTracks(res.data))
+    })
     .catch(err => console.error('Fetching songs unsuccessful', err))
 }
 
@@ -33,6 +46,7 @@ export const getRecentTracks = () => dispatch => {
 export default function(state = defaultTracks, action) {
 
   switch(action.type) {
+
     case GET_TRACKS:
       return action.tracks
 

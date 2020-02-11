@@ -48,8 +48,9 @@ const createApp = () => {
 
   app.use(express.static(path.join(__dirname, '..', 'public')))
 
+  // added .ico condition to prevent server error. need to find out how to change favicon.ico
   app.use((req, res, next) => {
-    if (path.extname(req.path).length) {
+    if (path.extname(req.path).length && (path.extname(req.path) !== '.ico')) {
       const err = new Error('Not found')
       err.status = 404
       next(err)

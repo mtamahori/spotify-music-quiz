@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getRecentTracks, me } from '../../store';
+import { fetchTracks } from '../../store';
 import { List, Button } from 'semantic-ui-react';
 
 class Instance extends Component {
@@ -12,8 +12,8 @@ class Instance extends Component {
 
   handleClick(event) {
     event.preventDefault();
-    const { me, user } = this.props;
-    me();
+    const { fetchTracks, user } = this.props;
+    fetchTracks();
   }
 
   render() {
@@ -34,6 +34,6 @@ const mapState = ({ user, tracks }) => {
   }
 }
 
-const mapDispatch = ({ getRecentTracks, me })
+const mapDispatch = ({ fetchTracks })
 
 export default connect(mapState, mapDispatch)(Instance);
