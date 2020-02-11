@@ -6,6 +6,7 @@ const { User } = require('../db/models')
 if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
   console.log('Spotify client ID and/or secret not found. Skipping Spotify OAuth.')
 } else {
+
   const spotifyConfig = {
     clientID: process.env.SPOTIFY_CLIENT_ID,
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
@@ -34,6 +35,7 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
           }
           else {
             let user = {id: foundUser.id, user: foundUser, access: accessToken, refreshToken}
+            console.log('THE USER WE WANT', user)
             return done(null, user)
           }
         })

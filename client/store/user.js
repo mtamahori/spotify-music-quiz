@@ -35,22 +35,6 @@ export const updateUser = (user) => dispatch => {
     .catch(err => console.error('Updating user info unsuccessful', err))
 }
 
-// export const auth = (username, password, method) => async dispatch => {
-//   let res;
-//   try {
-//     res = await axios.post(`/auth/${method}`, { username, password })
-//   } catch (authError) {
-//     return dispatch(getUser({ error: authError }))
-//   }
-
-//   try {
-//     dispatch(getUser(res.data))
-//     history.push('/home')
-//   } catch (dispatchOrHistoryErr) {
-//     console.error(dispatchOrHistoryErr)
-//   }
-// }
-
 export const logout = () => async dispatch => {
   try {
     await axios.post('/auth/logout')

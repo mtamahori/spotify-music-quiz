@@ -11,6 +11,9 @@ const UPDATE_TRACKS = 'UPDATE_TRACKS';
 const REMOVE_TRACKS = 'REMOVE_TRACKS';
 
 // ACTION CREATORS
+//getTracks to start game
+//updateTracks to continue to next round
+//removeTracks to end game
 
 const getTracks = (tracks) => ({ type: GET_TRACKS, tracks })
 const updateTracks = (tracks) => ({ type: UPDATE_TRACKS, tracks })
@@ -20,7 +23,7 @@ const removeTracks = () => ({ type: REMOVE_TRACKS })
 
 export const getRecentTracks = () => dispatch => {
   axios
-    .get('/api/spotify/recentTracks')
+    .get('/api/spotify/getRecentTracks')
     .then(res => dispatch(getTracks(res.data)))
     .catch(err => console.error('Fetching songs unsuccessful', err))
 }
@@ -43,7 +46,3 @@ export default function(state = defaultTracks, action) {
       return state
   }
 }
-
-//getTracks to start game
-//updateTracks to continue to next round
-//removeTracks to end game
