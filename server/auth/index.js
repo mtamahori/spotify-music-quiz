@@ -1,5 +1,7 @@
 const router = require('express').Router()
 
+router.use('/spotify', require('./spotify'))
+
 router.post('/logout', (req, res) => {
   req.logout()
   req.session.destroy()
@@ -9,7 +11,5 @@ router.post('/logout', (req, res) => {
 router.get('/me', (req, res) => {
   res.json(req.user)
 })
-
-router.use('/spotify', require('./spotify'))
 
 module.exports = router

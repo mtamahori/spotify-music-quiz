@@ -11,7 +11,7 @@ const GET_USER = 'GET_USER';
 const EDIT_USER = 'EDIT_USER';
 const REMOVE_USER = 'REMOVE_USER';
 
-// ACTIOIN CREATORS
+// ACTION CREATORS
 
 const getUser = user => ({ type: GET_USER, user })
 const editUser = user => ({ type: EDIT_USER, user })
@@ -35,21 +35,21 @@ export const updateUser = (user) => dispatch => {
     .catch(err => console.error('Updating user info unsuccessful', err))
 }
 
-export const auth = (username, password, method) => async dispatch => {
-  let res;
-  try {
-    res = await axios.post(`/auth/${method}`, { username, password })
-  } catch (authError) {
-    return dispatch(getUser({ error: authError }))
-  }
+// export const auth = (username, password, method) => async dispatch => {
+//   let res;
+//   try {
+//     res = await axios.post(`/auth/${method}`, { username, password })
+//   } catch (authError) {
+//     return dispatch(getUser({ error: authError }))
+//   }
 
-  try {
-    dispatch(getUser(res.data))
-    history.push('/home')
-  } catch (dispatchOrHistoryErr) {
-    console.error(dispatchOrHistoryErr)
-  }
-}
+//   try {
+//     dispatch(getUser(res.data))
+//     history.push('/home')
+//   } catch (dispatchOrHistoryErr) {
+//     console.error(dispatchOrHistoryErr)
+//   }
+// }
 
 export const logout = () => async dispatch => {
   try {

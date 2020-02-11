@@ -9,6 +9,12 @@ const User = db.define('user', {
   },
   spotifyUserId: {
     type: Sequelize.STRING
+  },
+  correct: {
+    type: Sequelize.INTEGER
+  },
+  incorrect: {
+    type: Sequelize.INTEGER
   }
 })
 

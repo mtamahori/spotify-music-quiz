@@ -4,3 +4,4 @@ export { default as Footer } from './Footer';
 export { default as Login } from './Login';
 
 export { default as Main } from './Game/Main';
+export { default as Instance } from './Game/Instance';
