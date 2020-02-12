@@ -11,16 +11,17 @@ router.get('/refreshToken', tokenRefresh, (req, res, next) => {
   res.json(req.user.access)
 })
 
-router.get('/getTracks', tokenRefresh, (req, res, next) => {
-
+router.get('/recentlyPlayed', tokenRefresh, (req, res, next) => {
+  console.log('REQ USER ACCESS', req.user)
   spotifyApi.setAccessToken(req.user.access)
 
-  return spotifyApi.getMySavedTracks({
-    limit: 2,
+  return spotifyApi.getMyRecentlyPlayedTracks({
+    limit: 4
   })
   .then(data => {
-    console.log('SPOTIFY DATA.BODY.ITEMS', data.body.items)
+    // console.log('SPOTIFY DATA.BODY.ITEMS', data.body.items)
     res.send(data.body.items)
   })
   .catch(next)
 })
+

@@ -10,17 +10,17 @@ class Instance extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(event) {
+  handleClick(event, type) {
     event.preventDefault();
     const { fetchTracks, user } = this.props;
-    fetchTracks();
+    fetchTracks(type);
   }
 
   render() {
     return (
       <div className="instance">
         <h3>INSTANCE</h3>
-        <Button onClick={(event) => this.handleClick(event)}>GET ME</Button>
+        <Button onClick={(event) => this.handleClick(event, 'recentlyPlayed')}>RECENTLY PLAYED TRACKS</Button>
       </div>
     )
   }

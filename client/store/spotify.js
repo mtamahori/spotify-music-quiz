@@ -31,11 +31,11 @@ const removeTracks = () => ({ type: REMOVE_TRACKS })
 
 //THUNKS
 
-export const fetchTracks = () => dispatch => {
+export const fetchTracks = (type) => dispatch => {
   axios
-    .get('/api/spotify/getTracks')
+    .get(`/api/spotify/${type}`)
     .then(res => {
-      console.log('SERVER RESPONSE', res)
+      console.log('RES.DATA', res.data)
       dispatch(getTracks(res.data))
     })
     .catch(err => console.error('Fetching songs unsuccessful', err))

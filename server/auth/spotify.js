@@ -33,7 +33,6 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
           }
           else {
             let user = {id: foundUser.id, user: foundUser, access: token, refreshToken}
-            console.log('THE USER WE WANT', user)
             return done(null, user)
           }
         })
