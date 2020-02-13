@@ -25,3 +25,13 @@ router.get('/recentlyPlayed', tokenRefresh, (req, res, next) => {
   .catch(next)
 })
 
+router.post('/play', (req, res, next) => {
+  spotifyApi.setAccessToken(req.user.access)
+  const uris = [ req.body.spotify_uri ]
+  const device_id = req.body.playerInstance._options.id
+  const options = {
+    uris,
+    device_id
+  }
+  return spotifyApi.play(options).catch(next)
+})

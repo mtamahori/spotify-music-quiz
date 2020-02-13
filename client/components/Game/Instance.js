@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Script from 'react-load-script';
+import axios from 'axios';
 import { fetchTracks } from '../../store';
 import { List, Button } from 'semantic-ui-react';
-import Script from 'react-load-script';
 
 class Instance extends Component {
   constructor(props){
     super(props)
 
     this.state = {
-      scriptLoaded: false
+      scriptLoaded: false,
+      player: {}
     }
 
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
     this.tokenCallback = this.tokenCallback.bind(this);
     this.handleFetchTracks = this.handleFetchTracks.bind(this);
+    this.handlePlay = this.handlePlay.bind(this);
   }
 
   componentDidMount() {
@@ -50,6 +53,8 @@ class Instance extends Component {
     });
 
     player.connect();
+
+    this.setState({ player });
   }
 
   tokenCallback(token) {
@@ -77,6 +82,20 @@ class Instance extends Component {
     fetchTracks(type);
   }
 
+  handlePlay() {
+    event.preventDefault();
+    const { player } = this.state;
+    const playParams = ({
+      playerInstance: player,
+      spotify_uri: 'spotify:track:5B4r3ByjXsuuSSju6Ht5rf'
+    })
+    return (
+      axios
+        .post('/api/spotify/play', playParams)
+        .catch(err => console.error('Playing track unsuccessful', err))
+    )
+  }
+
   render() {
     const { user } = this.props;
     return (
@@ -91,6 +110,7 @@ class Instance extends Component {
             onLoad={this.handleScriptLoad.bind(this)}
           />
         </div>
+        <Button onClick={(event) => this.handlePlay()}>PLAY</Button>
       </div>
     )
   }
