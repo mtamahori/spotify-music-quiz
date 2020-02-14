@@ -18,6 +18,7 @@ class Instance extends Component {
     this.tokenCallback = this.tokenCallback.bind(this);
     this.handleFetchTracks = this.handleFetchTracks.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
+    this.handlePause = this.handlePause.bind(this);
   }
 
   componentDidMount() {
@@ -96,6 +97,17 @@ class Instance extends Component {
     )
   }
 
+  handlePause() {
+    event.preventDefault();
+    const { player } = this.state;
+    const pauseParams = ({ playerInstance: player })
+    return (
+      axios
+        .post('/api/spotify/pause', pauseParams)
+        .catch(err => console.error('Pausing track unsuccessful', err))
+    )
+  }
+
   render() {
     const { user } = this.props;
     return (
@@ -116,6 +128,7 @@ class Instance extends Component {
           />
         </div>
         <Button onClick={(event) => this.handlePlay()}>PLAY</Button>
+        <Button onClick={(event) => this.handlePause()}>PAUSE</Button>
       </div>
     )
   }
