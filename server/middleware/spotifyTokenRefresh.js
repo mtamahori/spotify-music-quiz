@@ -18,7 +18,7 @@ module.exports = {
       })
       .then(res => res.data)
       .then(data => {
-          console.log('NEW TOKEN IN TOKENREFRESH', data)
+          console.log('REFRESHING ACCESS TOKEN', data)
           req.user.access = data.access_token
           next()
       })

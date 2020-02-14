@@ -78,7 +78,7 @@ class Instance extends Component {
 
   handleFetchTracks(event, type) {
     event.preventDefault();
-    const { fetchTracks, user } = this.props;
+    const { fetchTracks } = this.props;
     fetchTracks(type);
   }
 
@@ -101,8 +101,13 @@ class Instance extends Component {
     return (
       <div className="instance">
         <h3>INSTANCE</h3>
-        <Button onClick={(event) => this.handleFetchTracks(event, 'recentlyPlayed')}>RECENTLY PLAYED TRACKS</Button>
+        <Button onClick={(event) => this.handleFetchTracks(event, 'RecentlyPlayedTracks')}>RECENTLY PLAYED</Button>
+        <Button onClick={(event) => this.handleFetchTracks(event, 'TopTracks')}>TOP TRACKS</Button>
+        <Button onClick={(event) => this.handleFetchTracks(event, 'TopArtists')}>TOP ARTISTS</Button>
+        <Button onClick={(event) => this.handleFetchTracks(event, 'SavedTracks')}>SAVED TRACKS</Button>
+        <Button onClick={(event) => this.handleFetchTracks(event, 'SavedAlbums')}>SAVED ALBUMS</Button>
         <div className="player">
+        <div className="player"></div>
           <Script
             url="https://sdk.scdn.co/spotify-player.js"
             onCreate={this.handleScriptCreate.bind(this)}

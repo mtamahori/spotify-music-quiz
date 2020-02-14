@@ -1,19 +1,4 @@
 import axios from 'axios';
-import SpotifyWebApi from 'spotify-web-api-node';
-
-const spotifyApi = new SpotifyWebApi();
-
-// TOKEN HELPER FUNCTION
-
-// export const setSpotifyToken = () => {
-//   return axios.get('/api/spotify/refreshToken')
-//   .then(res => res.data)
-//   .then(token => {
-//     spotifyApi.setAccessToken(token)
-//     console.log('NEW TOKEN IN SPOTIFY STORE', token)
-//   })
-// }
-// DEFAULT
 
 const defaultTracks = {};
 
@@ -31,9 +16,9 @@ const removeTracks = () => ({ type: REMOVE_TRACKS })
 
 //THUNKS
 
-export const fetchTracks = (type) => dispatch => {
+export const fetchTracks = (endpoint) => dispatch => {
   axios
-    .get(`/api/spotify/${type}`)
+    .get(`/api/spotify/${endpoint}`)
     .then(res => {
       console.log('RES.DATA', res.data)
       dispatch(getTracks(res.data))
