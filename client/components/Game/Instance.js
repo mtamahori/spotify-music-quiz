@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Script from 'react-load-script';
 import axios from 'axios';
-import { fetchTracks } from '../../store';
+import { fetchTracks, removeTracks } from '../../store';
 import { List, Button } from 'semantic-ui-react';
 
 class Instance extends Component {
@@ -17,6 +17,7 @@ class Instance extends Component {
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
     this.tokenCallback = this.tokenCallback.bind(this);
     this.handleFetchTracks = this.handleFetchTracks.bind(this);
+    this.handleRemoveTracks = this.handleRemoveTracks.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
   }
@@ -43,7 +44,9 @@ class Instance extends Component {
     player.addListener('account_error', ({ message }) => { console.error(message); });
     player.addListener('playback_error', ({ message }) => { console.error(message); });
 
-    player.addListener('player_state_changed', state => { console.log(state); });
+    player.addListener('player_state_changed', state => {
+      console.log(state);
+    });
 
     player.addListener('ready', ({ device_id }) => {
       console.log('Ready with Device ID', device_id);
@@ -83,7 +86,13 @@ class Instance extends Component {
     fetchTracks(type);
   }
 
-  handlePlay() {
+  handleRemoveTracks(event) {
+    event.preventDefault();
+    const { removeTracks } = this.props;
+    removeTracks()
+  }
+
+  handlePlay(event) {
     event.preventDefault();
     const { player } = this.state;
     const playParams = ({
@@ -97,7 +106,7 @@ class Instance extends Component {
     )
   }
 
-  handlePause() {
+  handlePause(event) {
     event.preventDefault();
     const { player } = this.state;
     const pauseParams = ({ playerInstance: player })
@@ -127,8 +136,9 @@ class Instance extends Component {
             onLoad={this.handleScriptLoad.bind(this)}
           />
         </div>
-        <Button onClick={(event) => this.handlePlay()}>PLAY</Button>
-        <Button onClick={(event) => this.handlePause()}>PAUSE</Button>
+        <Button onClick={(event) => this.handlePlay(event)}>PLAY</Button>
+        <Button onClick={(event) => this.handlePause(event)}>PAUSE</Button>
+        <Button onClick={(event) => this.handleRemoveTracks(event)}>RESET TRACKS</Button>
       </div>
     )
   }
@@ -141,6 +151,6 @@ const mapState = ({ user, tracks }) => {
   }
 }
 
-const mapDispatch = ({ fetchTracks })
+const mapDispatch = ({ fetchTracks, removeTracks })
 
 export default connect(mapState, mapDispatch)(Instance);

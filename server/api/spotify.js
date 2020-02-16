@@ -21,16 +21,6 @@ router.get('/:endpoint', (req, res, next) => {
 })
 
 router.post('/play', (req, res, next) => {
-    const uris = [ req.body.spotify_uri ]
-  const device_id = req.body.playerInstance._options.id
-  const options = {
-    uris,
-    device_id
-  }
-  return spotifyApi.play(options).catch(next)
-})
-
-router.post('/play', (req, res, next) => {
   const uris = [ req.body.spotify_uri ]
   const device_id = req.body.playerInstance._options.id
   const options = {

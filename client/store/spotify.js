@@ -1,18 +1,16 @@
 import axios from 'axios';
 
-const defaultTracks = {};
+const defaultTracks = [];
 
 // ACTION TYPES
 
 const GET_TRACKS = 'GET_TRACKS';
-const UPDATE_TRACKS = 'UPDATE_TRACKS';
-const REMOVE_TRACKS = 'REMOVE_TRACKS';
+const DELETE_TRACKS = 'DELETE_TRACKS';
 
 // ACTION CREATORS
 
 const getTracks = (tracks) => ({ type: GET_TRACKS, tracks })
-const updateTracks = (tracks) => ({ type: UPDATE_TRACKS, tracks })
-const removeTracks = () => ({ type: REMOVE_TRACKS })
+const deleteTracks = () => ({ type: DELETE_TRACKS })
 
 //THUNKS
 
@@ -26,6 +24,10 @@ export const fetchTracks = (endpoint) => dispatch => {
     .catch(err => console.error('Fetching songs unsuccessful', err))
 }
 
+export const removeTracks = () => dispatch => {
+  dispatch(deleteTracks())
+}
+
 // REDUCER
 
 export default function(state = defaultTracks, action) {
@@ -33,12 +35,9 @@ export default function(state = defaultTracks, action) {
   switch(action.type) {
 
     case GET_TRACKS:
-      return action.tracks
+      return action.tracks;
 
-    case UPDATE_TRACKS:
-      return action.tracks
-
-    case REMOVE_TRACKS:
+    case DELETE_TRACKS:
       return defaultTracks
 
     default:
