@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter, Route, Switch } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { me } from './store'
-import { Landing, Login, Main, Instance } from './components'
+import { Landing, Login, Home, Instance } from './components'
 
 class Routes extends Component {
   componentDidMount() {
@@ -19,7 +19,7 @@ class Routes extends Component {
 
         {isLoggedIn && (
           <Switch>
-            <Route exact path="/main" component={Main} />
+            <Route exact path="/home" component={Home} />
             <Route exact path="/instance" component={Instance} />
           </Switch>
         )}

@@ -9,7 +9,7 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
   <div className="navbar">
   {isLoggedIn ? (
     <Menu className="navbar-buttons" fluid widths={2}>
-      <Menu.Item as={Link} to="/main">Play Game</Menu.Item>
+      <Menu.Item as={Link} to="/home">Home</Menu.Item>
       <Menu.Item onClick={handleClick}>Logout</Menu.Item>
     </Menu>
   ) : (

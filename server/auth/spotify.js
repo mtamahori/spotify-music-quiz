@@ -47,7 +47,7 @@ if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
   }))
 
   router.get('/callback', passport.authenticate('spotify', {
-    successRedirect: '/main',
+    successRedirect: '/home',
     failureRedirect: '/login'
   }))
 

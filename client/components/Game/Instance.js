@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import history from '../../history'
 import Script from 'react-load-script';
 import axios from 'axios';
 import { fetchTracks, fetchMoreTracks, removeTracks } from '../../store';
-import { List, Button } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
+import { Tracklist, Buttons, Score } from '../';
 
 class Instance extends Component {
   constructor(props){
@@ -18,7 +20,7 @@ class Instance extends Component {
     this.tokenCallback = this.tokenCallback.bind(this);
     this.handleFetchTracks = this.handleFetchTracks.bind(this);
     this.handleFetchMoreTracks = this.handleFetchMoreTracks.bind(this);
-    this.handleRemoveTracks = this.handleRemoveTracks.bind(this);
+    this.handleEndGame = this.handleEndGame.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
   }
@@ -28,6 +30,9 @@ class Instance extends Component {
       this.handleLoadSuccess();
     }
     this.handleFetchTracks('RecentlyPlayedTracks')
+    this.handleFetchMoreTracks('TopTracks')
+    this.handleFetchMoreTracks('SaveDTracks')
+    this.handleFetchMoreTracks('SavedAlbums')
   }
 
   handleLoadSuccess() {
@@ -87,16 +92,16 @@ class Instance extends Component {
     fetchTracks(type);
   }
 
-  handleFetchMoreTracks(event, type) {
-    event.preventDefault();
+  handleFetchMoreTracks(type) {
     const { fetchMoreTracks } = this.props;
     fetchMoreTracks(type);
   }
 
-  handleRemoveTracks(event) {
+  handleEndGame(event) {
     event.preventDefault();
     const { removeTracks } = this.props;
-    removeTracks()
+    removeTracks();
+    history.push('/home')
   }
 
   handlePlay(event) {
@@ -125,15 +130,15 @@ class Instance extends Component {
   }
 
   render() {
+
     const { user } = this.props;
+
     return (
       <div className="instance">
-        <h3>INSTANCE</h3>
-        <Button onClick={(event) => this.handleFetchMoreTracks(event, 'TopTracks')}>TOP TRACKS</Button>
-        <Button onClick={(event) => this.handleFetchMoreTracks(event, 'SavedTracks')}>SAVED TRACKS</Button>
-        <Button onClick={(event) => this.handleFetchMoreTracks(event, 'SavedAlbums')}>SAVED ALBUMS</Button>
+
+        <h2>GAME INSTANCE</h2>
+
         <div className="player">
-        <div className="player"></div>
           <Script
             url="https://sdk.scdn.co/spotify-player.js"
             onCreate={this.handleScriptCreate.bind(this)}
@@ -141,9 +146,19 @@ class Instance extends Component {
             onLoad={this.handleScriptLoad.bind(this)}
           />
         </div>
-        <Button onClick={(event) => this.handlePlay(event)}>PLAY</Button>
-        <Button onClick={(event) => this.handlePause(event)}>PAUSE</Button>
-        <Button onClick={(event) => this.handleRemoveTracks(event)}>RESET TRACKS</Button>
+
+        <Tracklist />
+
+        <Buttons
+          handlePlay={this.handlePlay}
+          handlePause={this.handlePause}
+          handleEndGame={this.handleEndGame}
+        />
+
+        <Score
+          user={user}
+        />
+
       </div>
     )
   }
