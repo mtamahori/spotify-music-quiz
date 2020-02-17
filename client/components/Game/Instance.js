@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Script from 'react-load-script';
 import axios from 'axios';
-import { fetchTracks, removeTracks } from '../../store';
+import { fetchTracks, fetchMoreTracks, removeTracks } from '../../store';
 import { List, Button } from 'semantic-ui-react';
 
 class Instance extends Component {
@@ -17,6 +17,7 @@ class Instance extends Component {
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
     this.tokenCallback = this.tokenCallback.bind(this);
     this.handleFetchTracks = this.handleFetchTracks.bind(this);
+    this.handleFetchMoreTracks = this.handleFetchMoreTracks.bind(this);
     this.handleRemoveTracks = this.handleRemoveTracks.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
@@ -26,6 +27,7 @@ class Instance extends Component {
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.handleLoadSuccess();
     }
+    this.handleFetchTracks('RecentlyPlayedTracks')
   }
 
   handleLoadSuccess() {
@@ -80,10 +82,15 @@ class Instance extends Component {
     console.log("Script loaded");
   }
 
-  handleFetchTracks(event, type) {
-    event.preventDefault();
+  handleFetchTracks(type) {
     const { fetchTracks } = this.props;
     fetchTracks(type);
+  }
+
+  handleFetchMoreTracks(event, type) {
+    event.preventDefault();
+    const { fetchMoreTracks } = this.props;
+    fetchMoreTracks(type);
   }
 
   handleRemoveTracks(event) {
@@ -122,11 +129,9 @@ class Instance extends Component {
     return (
       <div className="instance">
         <h3>INSTANCE</h3>
-        <Button onClick={(event) => this.handleFetchTracks(event, 'RecentlyPlayedTracks')}>RECENTLY PLAYED</Button>
-        <Button onClick={(event) => this.handleFetchTracks(event, 'TopTracks')}>TOP TRACKS</Button>
-        <Button onClick={(event) => this.handleFetchTracks(event, 'TopArtists')}>TOP ARTISTS</Button>
-        <Button onClick={(event) => this.handleFetchTracks(event, 'SavedTracks')}>SAVED TRACKS</Button>
-        <Button onClick={(event) => this.handleFetchTracks(event, 'SavedAlbums')}>SAVED ALBUMS</Button>
+        <Button onClick={(event) => this.handleFetchMoreTracks(event, 'TopTracks')}>TOP TRACKS</Button>
+        <Button onClick={(event) => this.handleFetchMoreTracks(event, 'SavedTracks')}>SAVED TRACKS</Button>
+        <Button onClick={(event) => this.handleFetchMoreTracks(event, 'SavedAlbums')}>SAVED ALBUMS</Button>
         <div className="player">
         <div className="player"></div>
           <Script
@@ -151,6 +156,6 @@ const mapState = ({ user, tracks }) => {
   }
 }
 
-const mapDispatch = ({ fetchTracks, removeTracks })
+const mapDispatch = ({ fetchTracks, fetchMoreTracks, removeTracks })
 
 export default connect(mapState, mapDispatch)(Instance);

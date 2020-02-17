@@ -11,13 +11,56 @@ router.use('/', tokenRefresh, (req, res, next) => {
 })
 
 router.get('/:endpoint', (req, res, next) => {
-  return spotifyApi['getMy'+req.params.endpoint]({
-    limit: 4
-  })
-  .then(data => {
-    res.send(data.body.items)
-  })
-  .catch(next)
+
+  if (req.params.endpoint === 'RecentlyPlayedTracks' ) {
+    return spotifyApi.getMyRecentlyPlayedTracks()
+    .then(data => {
+      let recentArr = data.body.items;
+      let tracks = [];
+      recentArr.forEach(track => {
+        tracks.push(track.track);
+      })
+      res.send(tracks)
+    })
+    .catch(next);
+  }
+
+  if (req.params.endpoint === 'SavedTracks' ) {
+    return spotifyApi.getMySavedTracks({limit: 50})
+    .then(data => {
+      let recentArr = data.body.items;
+      let tracks = [];
+      recentArr.forEach(track => {
+        tracks.push(track.track);
+      })
+      res.send(tracks)
+    })
+    .catch(next);
+  }
+
+  if (req.params.endpoint === 'SavedAlbums') {
+    return spotifyApi.getMySavedAlbums()
+    .then(data => {
+      let albums = data.body.items;
+      let tracks = [];
+      albums.forEach(album => {
+        let albumTracks = album.album.tracks.items;
+        albumTracks.forEach(albumTrack => {
+          tracks.push(albumTrack)
+        })
+      })
+      res.send(tracks)
+    })
+    .catch(next)
+  }
+
+  else {
+    return spotifyApi['getMy'+req.params.endpoint]()
+    .then(data => {
+      res.send(data.body.items)
+    })
+    .catch(next)
+  }
 })
 
 router.post('/play', (req, res, next) => {
