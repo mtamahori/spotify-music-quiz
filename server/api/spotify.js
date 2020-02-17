@@ -10,10 +10,17 @@ router.use('/', tokenRefresh, (req, res, next) => {
   next();
 })
 
-router.get('/:endpoint', (req, res, next) => {
+// GENERAL SPOTIFY REQUESTS
+// router.get('/:endpoint', (req, res, next) => {
+//   return spotifyApi['getMy'+req.params.endpoint]()
+//   .then(data => {
+//     res.send(data.body.items)
+//   })
+//   .catch(next)
+// })
 
-  if (req.params.endpoint === 'RecentlyPlayedTracks' ) {
-    return spotifyApi.getMyRecentlyPlayedTracks()
+router.get('/RecentlyPlayedTracks', (req, res, next) => {
+  return spotifyApi.getMyRecentlyPlayedTracks()
     .then(data => {
       let recentArr = data.body.items;
       let tracks = [];
@@ -23,23 +30,32 @@ router.get('/:endpoint', (req, res, next) => {
       res.send(tracks)
     })
     .catch(next);
-  }
+})
 
-  if (req.params.endpoint === 'SavedTracks' ) {
-    return spotifyApi.getMySavedTracks({limit: 50})
+router.get('/TopTracks', (req, res, next) => {
+  return spotifyApi.getMyTopTracks()
+  .then(data => {
+    let tracks = data.body.items
+    res.send(tracks)
+  })
+  .catch(next);
+})
+
+router.get('/SavedTracks', (req, res, next) => {
+  return spotifyApi.getMySavedTracks({limit: 50})
     .then(data => {
-      let recentArr = data.body.items;
+      let savedArr = data.body.items;
       let tracks = [];
-      recentArr.forEach(track => {
+      savedArr.forEach(track => {
         tracks.push(track.track);
       })
       res.send(tracks)
     })
     .catch(next);
-  }
+})
 
-  if (req.params.endpoint === 'SavedAlbums') {
-    return spotifyApi.getMySavedAlbums()
+router.get('/SavedAlbums', (req, res, next) => {
+  return spotifyApi.getMySavedAlbums()
     .then(data => {
       let albums = data.body.items;
       let tracks = [];
@@ -52,15 +68,6 @@ router.get('/:endpoint', (req, res, next) => {
       res.send(tracks)
     })
     .catch(next)
-  }
-
-  else {
-    return spotifyApi['getMy'+req.params.endpoint]()
-    .then(data => {
-      res.send(data.body.items)
-    })
-    .catch(next)
-  }
 })
 
 router.post('/play', (req, res, next) => {
