@@ -20,7 +20,6 @@ export const fetchTracks = (endpoint) => dispatch => {
   axios
     .get(`/api/spotify/${endpoint}`)
     .then(res => {
-      console.log('RES.DATA', res.data)
       dispatch(getTracks(res.data))
     })
     .catch(err => console.error('Fetching songs unsuccessful', err))
@@ -30,7 +29,6 @@ export const fetchMoreTracks = (endpoint) => dispatch => {
   axios
   .get(`/api/spotify/${endpoint}`)
   .then(res => {
-    console.log('RES.DATA', res.data)
     dispatch(getMoreTracks(res.data))
   })
   .catch(err => console.error('Fetching songs unsuccessful', err))

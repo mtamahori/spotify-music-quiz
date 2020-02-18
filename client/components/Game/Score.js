@@ -1,9 +1,12 @@
 import React from 'react';
 
-const Score = () => {
+const Score = (props) => {
+  const { user, currentCorrect, currentRounds } = props;
+
   return (
-    <div className="score">
-      <h4>SCORE / SCORE</h4>
+    <div className="scores">
+      <h4>Current score: {currentCorrect} / {currentRounds}</h4>
+      <h4>All-time score: {user.user.correct} / {user.user.rounds} </h4>
     </div>
   )
 }

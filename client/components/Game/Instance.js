@@ -4,7 +4,6 @@ import history from '../../history'
 import Script from 'react-load-script';
 import axios from 'axios';
 import { fetchTracks, fetchMoreTracks, removeTracks } from '../../store';
-import { Button } from 'semantic-ui-react';
 import { Tracklist, Buttons, Score } from '../';
 
 class Instance extends Component {
@@ -13,7 +12,9 @@ class Instance extends Component {
 
     this.state = {
       scriptLoaded: false,
-      player: {}
+      player: {},
+      currentCorrect: 0,
+      currentRounds: 0
     }
 
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
@@ -38,13 +39,12 @@ class Instance extends Component {
   handleLoadSuccess() {
     const { user } = this.props;
     this.setState({ scriptLoaded: true });
-    console.log('SCRIPT LOAD SUCCESS');
+    console.log('SPOTIFY SDK SCRIPT LOAD SUCCESS');
     const token = user.access;
     const player = new window.Spotify.Player({
       name: 'Spotify Music Quiz Player',
       getOAuthToken: callback => { callback(token) }
     })
-    console.log('PLAYER', player)
 
     player.addListener('initialization_error', ({ message }) => { console.error(message); });
     player.addListener('authentication_error', ({ message }) => { console.error(message); });
@@ -131,7 +131,8 @@ class Instance extends Component {
 
   render() {
 
-    const { user } = this.props;
+    const { user, tracks } = this.props;
+    const { currentCorrect, currentRounds } = this.state;
 
     return (
       <div className="instance">
@@ -147,7 +148,9 @@ class Instance extends Component {
           />
         </div>
 
-        <Tracklist />
+        <Tracklist
+          tracks={tracks}
+        />
 
         <Buttons
           handlePlay={this.handlePlay}
@@ -157,6 +160,8 @@ class Instance extends Component {
 
         <Score
           user={user}
+          currentCorrect={currentCorrect}
+          currentRounds={currentRounds}
         />
 
       </div>

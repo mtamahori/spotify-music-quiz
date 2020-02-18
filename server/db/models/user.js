@@ -11,9 +11,11 @@ const User = db.define('user', {
     type: Sequelize.STRING
   },
   correct: {
+    defaultValue: 0,
     type: Sequelize.INTEGER
   },
-  incorrect: {
+  rounds: {
+    defaultValue: 0,
     type: Sequelize.INTEGER
   }
 })
