@@ -7,7 +7,8 @@ import { Menu } from 'semantic-ui-react';
 
 const Navbar = ({ handleClick, isLoggedIn }) => (
   <div className="navbar">
-  {isLoggedIn ? (
+  {
+    isLoggedIn ? (
     <Menu className="navbar-buttons" fluid widths={2}>
       <Menu.Item as={Link} to="/home">Home</Menu.Item>
       <Menu.Item onClick={handleClick}>Logout</Menu.Item>
@@ -15,10 +16,11 @@ const Navbar = ({ handleClick, isLoggedIn }) => (
   ) : (
 
     <Menu className="navbar-buttons" fluid widths={2}>
-    <Menu.Item as={Link} to="/">Landing</Menu.Item>
-    <Menu.Item as={Link} to="/login">Login</Menu.Item>
+      <Menu.Item as={Link} to="/">Landing</Menu.Item>
+      <Menu.Item as={Link} to="/login">Login</Menu.Item>
     </Menu>
-  )}
+    )
+  }
   </div>
 )
 

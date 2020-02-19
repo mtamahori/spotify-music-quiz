@@ -24,6 +24,7 @@ class Instance extends Component {
     this.handleEndGame = this.handleEndGame.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
+    this.shuffle = this.shuffle.bind(this);
   }
 
   componentDidMount() {
@@ -32,7 +33,7 @@ class Instance extends Component {
     }
     this.handleFetchTracks('RecentlyPlayedTracks')
     this.handleFetchMoreTracks('TopTracks')
-    this.handleFetchMoreTracks('SaveDTracks')
+    this.handleFetchMoreTracks('SavedTracks')
     this.handleFetchMoreTracks('SavedAlbums')
   }
 
@@ -129,10 +130,34 @@ class Instance extends Component {
     )
   }
 
+  shuffle(max) {
+
+    function randomInt(max) {
+      return Math.floor(Math.random() * Math.floor(max))
+    }
+
+    let randomArr = [];
+
+    while (randomArr.length < 5) {
+      let currentRandom = randomInt(max)
+      console.log(currentRandom)
+      if (randomArr.indexOf(currentRandom) === -1) {
+        randomArr.push(currentRandom)
+      }
+    }
+    return randomArr;
+  }
+
   render() {
 
     const { user, tracks } = this.props;
     const { currentCorrect, currentRounds } = this.state;
+    // let randomTracks = [];
+    // let randomTrackIndexes = this.shuffle(tracks.length);
+    // console.log('random track indexes', randomTrackIndexes)
+    // for (let i = 0; i < 5; i++) {
+    //   randomTracks.push(tracks[randomTrackIndexes[i]])
+    // }
 
     return (
       <div className="instance">
@@ -149,7 +174,7 @@ class Instance extends Component {
         </div>
 
         <Tracklist
-          tracks={tracks}
+          randomTracks={tracks}
         />
 
         <Buttons
