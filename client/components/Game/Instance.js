@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import history from '../../history'
 import Script from 'react-load-script';
 import axios from 'axios';
-import { fetchTracks, fetchMoreTracks, removeTracks } from '../../store';
+import Promise from 'bluebird'
+import { fetchTracks, removeTracks } from '../../store';
 import { Tracklist, Buttons, Score } from '../';
 
 class Instance extends Component {
@@ -12,16 +13,16 @@ class Instance extends Component {
 
     this.state = {
       scriptLoaded: false,
+      tracksLoaded: false,
       player: {},
       currentCorrect: 0,
       currentRounds: 0,
-      indexes: []
+
     }
 
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
     this.tokenCallback = this.tokenCallback.bind(this);
     this.handleFetchTracks = this.handleFetchTracks.bind(this);
-    this.handleFetchMoreTracks = this.handleFetchMoreTracks.bind(this);
     this.handleEndGame = this.handleEndGame.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
@@ -32,10 +33,7 @@ class Instance extends Component {
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.handleLoadSuccess();
     }
-    this.handleFetchTracks('RecentlyPlayedTracks')
-    this.handleFetchMoreTracks('TopTracks')
-    this.handleFetchMoreTracks('SavedTracks')
-    this.handleFetchMoreTracks('SavedAlbums')
+    this.handleFetchTracks();
   }
 
   handleLoadSuccess() {
@@ -89,14 +87,14 @@ class Instance extends Component {
     console.log("Script loaded");
   }
 
-  handleFetchTracks(type) {
+  async handleFetchTracks() {
     const { fetchTracks } = this.props;
-    fetchTracks(type);
-  }
-
-  handleFetchMoreTracks(type) {
-    const { fetchMoreTracks } = this.props;
-    fetchMoreTracks(type);
+      await fetchTracks('RecentlyPlayedTracks')
+      await fetchTracks('TopTracks')
+      await fetchTracks('SavedTracks')
+      await fetchTracks('SavedAlbums')
+      this.setState({ tracksLoaded: true })
+      console.log('tracksloaded?', this.state.tracksLoaded)
   }
 
   handleEndGame(event) {
@@ -152,10 +150,7 @@ class Instance extends Component {
     //need to check for tracks.length because getRandomIdxs() was being called before the store was updated
     tracks.length ?
       randomIdxs = this.getRandomIdxs()
-      : console.log('STILL FETCHING TRACKS')
-    console.log('RANDOM IDXS', randomIdxs)
-
-
+      : console.log('Waiting for tracks to load');
 
     return (
       <div className="instance">
@@ -199,7 +194,7 @@ const mapState = ({ user, tracks }) => {
   }
 }
 
-const mapDispatch = ({ fetchTracks, fetchMoreTracks, removeTracks })
+const mapDispatch = ({ fetchTracks, removeTracks })
 
 export default connect(mapState, mapDispatch)(Instance);
 
