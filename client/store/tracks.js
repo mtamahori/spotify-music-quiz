@@ -15,8 +15,7 @@ const deleteTracks = () => ({ type: DELETE_TRACKS })
 //THUNKS
 
 export const fetchTracks = (endpoint) => dispatch => {
-  axios
-    .get(`/api/spotify/${endpoint}`)
+  return axios.get(`/api/spotify/${endpoint}`)
     .then(res => {
       dispatch(getTracks(res.data))
     })

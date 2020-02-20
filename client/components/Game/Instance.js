@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import history from '../../history'
 import Script from 'react-load-script';
 import axios from 'axios';
-import Promise from 'bluebird'
 import { fetchTracks, removeTracks } from '../../store';
 import { Tracklist, Buttons, Score } from '../';
 
 class Instance extends Component {
+  _isMounted = false;
   constructor(props){
     super(props)
 
@@ -17,7 +17,6 @@ class Instance extends Component {
       player: {},
       currentCorrect: 0,
       currentRounds: 0,
-
     }
 
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
@@ -30,10 +29,21 @@ class Instance extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     window.onSpotifyWebPlaybackSDKReady = () => {
       this.handleLoadSuccess();
     }
-    this.handleFetchTracks();
+    this.handleFetchTracks()
+    .then(() => {
+      if (this._isMounted) {
+        this.setState({ tracksLoaded: true })
+        console.log('tracksloaded?', this.state.tracksLoaded)
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleLoadSuccess() {
@@ -89,12 +99,18 @@ class Instance extends Component {
 
   async handleFetchTracks() {
     const { fetchTracks } = this.props;
-      await fetchTracks('RecentlyPlayedTracks')
-      await fetchTracks('TopTracks')
-      await fetchTracks('SavedTracks')
-      await fetchTracks('SavedAlbums')
-      this.setState({ tracksLoaded: true })
-      console.log('tracksloaded?', this.state.tracksLoaded)
+    // return Promise.all([
+    //   fetchTracks('RecentlyPlayedTracks'),
+    //   fetchTracks('TopTracks'),
+    //   fetchTracks('SavedTracks'),
+    //   fetchTracks('SavedAlbums'),
+    // ])
+    // .then(() => console.log('resolved'))
+    // .catch(() => console.log('failed'))
+    await fetchTracks('RecentlyPlayedTracks')
+    await fetchTracks('TopTracks')
+    await fetchTracks('SavedTracks')
+    await fetchTracks('SavedAlbums')
   }
 
   handleEndGame(event) {
@@ -143,14 +159,13 @@ class Instance extends Component {
   }
 
   render() {
-
     const { user, tracks } = this.props;
     const { currentCorrect, currentRounds } = this.state;
     let randomIdxs;
-    //need to check for tracks.length because getRandomIdxs() was being called before the store was updated
-    tracks.length ?
+    this.state.tracksLoaded === true ?
       randomIdxs = this.getRandomIdxs()
-      : console.log('Waiting for tracks to load');
+      : console.log('Waiting for all fetched tracks to dispatch to store before generating random indexes');
+      console.log('RANDOM INDEXES', randomIdxs);
 
     return (
       <div className="instance">
@@ -197,22 +212,3 @@ const mapState = ({ user, tracks }) => {
 const mapDispatch = ({ fetchTracks, removeTracks })
 
 export default connect(mapState, mapDispatch)(Instance);
-
-
-// shuffle(max) {
-
-//   function randomInt(max) {
-//     return Math.floor(Math.random() * Math.floor(max))
-//   }
-
-//   let randomArr = [];
-
-//   while (randomArr.length < 5) {
-//     let currentRandom = randomInt(max)
-//     console.log(currentRandom)
-//     if (randomArr.indexOf(currentRandom) === -1) {
-//       randomArr.push(currentRandom)
-//     }
-//   }
-//   return randomArr;
-// }
