@@ -113,12 +113,12 @@ class Instance extends Component {
     history.push('/home')
   }
 
-  handlePlay(event) {
+  handlePlay(event, spotifyUri) {
     event.preventDefault();
     const { player } = this.state;
     const playParams = ({
       playerInstance: player,
-      spotify_uri: 'spotify:track:5B4r3ByjXsuuSSju6Ht5rf'
+      spotify_uri: spotifyUri
     })
     return (
       axios
@@ -138,12 +138,10 @@ class Instance extends Component {
     )
   }
 
-  getRandomIndexes() {
-    const { tracks } = this.props;
-    let max = tracks.length;
+  getRandomIndexes(arrLength, max) {
     let randomIndexes = [];
-    while (randomIndexes.length < 5) {
-      let randomIdx = Math.floor(Math.random()*max)
+    while (randomIndexes.length < max) {
+      let randomIdx = Math.floor(Math.random()*arrLength)
       if (randomIndexes.indexOf(randomIdx) === -1) {
         randomIndexes.push(randomIdx);
       }
@@ -163,11 +161,13 @@ class Instance extends Component {
   render() {
     const { user, tracks } = this.props;
     const { currentCorrect, currentRounds } = this.state;
-    let randomTracks = [];
     let randomIndexes = [];
+    let randomTracks = [];
+    let currentTrackIndex = [];
+    let currentTrack;
 
     this.state.tracksLoaded === true ?
-    randomIndexes = this.getRandomIndexes()
+    randomIndexes = this.getRandomIndexes(tracks.length, 5)
     : console.log('Waiting for all fetched tracks to dispatch to store before generating random indexes');
     console.log('RANDOM INDEXES', randomIndexes);
 
@@ -175,6 +175,16 @@ class Instance extends Component {
     randomTracks = this.getRandomTracks(randomIndexes)
     : console.log('Error pulling random tracks')
     console.log('RANDOM TRACKS', randomTracks);
+
+    randomTracks.length ?
+    currentTrackIndex = this.getRandomIndexes(randomTracks.length, 1)
+    : console.log('Error selecting random track index');
+    console.log('CURRENT TRACK INDEX', currentTrackIndex);
+
+    currentTrackIndex.length ?
+    currentTrack = randomTracks[currentTrackIndex]
+    : console.log('Error setting current random track')
+    console.log('CURRENT TRACK', currentTrack)
 
     return (
       <div className="instance">
@@ -195,6 +205,7 @@ class Instance extends Component {
         />
 
         <Buttons
+          currentTrack={currentTrack}
           handlePlay={this.handlePlay}
           handlePause={this.handlePause}
           handleEndGame={this.handleEndGame}
