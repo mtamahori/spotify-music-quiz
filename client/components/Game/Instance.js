@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import history from '../../history'
 import Script from 'react-load-script';
 import axios from 'axios';
-import { fetchTracks, removeTracks } from '../../store';
+import { fetchTracks, removeTracks, fetchPlayer, addPlayer } from '../../store';
 import { Tracklist, Buttons, Score } from '../';
 
 class Instance extends Component {
@@ -14,7 +14,6 @@ class Instance extends Component {
     this.state = {
       scriptLoaded: false,
       tracksLoaded: false,
-      player: {},
       currentCorrect: 0,
       currentRounds: 0,
     }
@@ -31,8 +30,11 @@ class Instance extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      this.handleLoadSuccess();
+
+    if (!this.props.player._options) {
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        this.handleLoadSuccess();
+      }
     }
     this.handleFetchTracks()
     .then(() => {
@@ -43,12 +45,8 @@ class Instance extends Component {
     })
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
   handleLoadSuccess() {
-    const { user } = this.props;
+    const { user, addPlayer } = this.props;
     this.setState({ scriptLoaded: true });
     console.log('SPOTIFY SDK SCRIPT LOAD SUCCESS');
     const token = user.access;
@@ -76,7 +74,9 @@ class Instance extends Component {
 
     player.connect();
 
-    this.setState({ player });
+    addPlayer(player);
+
+    console.log('PLAYER INSTANCE', player)
   }
 
   tokenCallback(token) {
@@ -115,7 +115,7 @@ class Instance extends Component {
 
   handlePlay(event, spotifyUri) {
     event.preventDefault();
-    const { player } = this.state;
+    const { player } = this.props;
     const playParams = ({
       playerInstance: player,
       spotify_uri: spotifyUri
@@ -129,7 +129,7 @@ class Instance extends Component {
 
   handlePause(event) {
     event.preventDefault();
-    const { player } = this.state;
+    const { player } = this.props;
     const pauseParams = ({ playerInstance: player })
     return (
       axios
@@ -166,39 +166,42 @@ class Instance extends Component {
     let currentTrackIndex = [];
     let currentTrack;
 
-    this.state.tracksLoaded === true ?
-    randomIndexes = this.getRandomIndexes(tracks.length, 5)
-    : console.log('Waiting for all fetched tracks to dispatch to store before generating random indexes');
-    console.log('RANDOM INDEXES', randomIndexes);
+    if (this.state.tracksLoaded === true) {
+      randomIndexes = this.getRandomIndexes(tracks.length, 5)
+      console.log('RANDOM INDEXES', randomIndexes);
+    }
 
-    randomIndexes.length ?
-    randomTracks = this.getRandomTracks(randomIndexes)
-    : console.log('Error pulling random tracks')
-    console.log('RANDOM TRACKS', randomTracks);
+    if (randomIndexes.length) {
+      randomTracks = this.getRandomTracks(randomIndexes)
+      console.log('RANDOM TRACKS', randomTracks);
+    }
 
-    randomTracks.length ?
-    currentTrackIndex = this.getRandomIndexes(randomTracks.length, 1)
-    : console.log('Error selecting random track index');
-    console.log('CURRENT TRACK INDEX', currentTrackIndex);
+    if (randomTracks.length) {
+      currentTrackIndex = this.getRandomIndexes(randomTracks.length, 1)
+      console.log('CURRENT TRACK INDEX', currentTrackIndex);
+    }
 
-    currentTrackIndex.length ?
-    currentTrack = randomTracks[currentTrackIndex]
-    : console.log('Error setting current random track')
-    console.log('CURRENT TRACK', currentTrack)
+    if (currentTrackIndex.length) {
+      currentTrack = randomTracks[currentTrackIndex]
+      console.log('CURRENT TRACK', currentTrack)
+    }
 
     return (
       <div className="instance">
 
         <h2>GAME INSTANCE</h2>
 
-        <div className="player">
-          <Script
-            url="https://sdk.scdn.co/spotify-player.js"
-            onCreate={this.handleScriptCreate.bind(this)}
-            onError={this.handleScriptError.bind(this)}
-            onLoad={this.handleScriptLoad.bind(this)}
-          />
-        </div>
+        {
+          !this.props.player._options &&
+          <div className="player">
+            <Script
+              url="https://sdk.scdn.co/spotify-player.js"
+              onCreate={this.handleScriptCreate.bind(this)}
+              onError={this.handleScriptError.bind(this)}
+              onLoad={this.handleScriptLoad.bind(this)}
+            />
+          </div>
+        }
 
         <Tracklist
           randomTracks={randomTracks}
@@ -222,13 +225,8 @@ class Instance extends Component {
   }
 }
 
-const mapState = ({ user, tracks }) => {
-  return {
-    user,
-    tracks
-  }
-}
+const mapState = ({ user, tracks, player }) => ({user, tracks, player });
 
-const mapDispatch = ({ fetchTracks, removeTracks })
+const mapDispatch = ({ fetchTracks, removeTracks, fetchPlayer, addPlayer });
 
 export default connect(mapState, mapDispatch)(Instance);

@@ -71,6 +71,7 @@ router.get('/SavedAlbums', (req, res, next) => {
 })
 
 router.post('/play', (req, res, next) => {
+  console.log('playerInstance', req.body.playerInstance)
   const uris = [ req.body.spotify_uri ]
   const device_id = req.body.playerInstance._options.id
   const options = {
