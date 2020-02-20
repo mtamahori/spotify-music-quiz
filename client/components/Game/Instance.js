@@ -14,7 +14,8 @@ class Instance extends Component {
       scriptLoaded: false,
       player: {},
       currentCorrect: 0,
-      currentRounds: 0
+      currentRounds: 0,
+      indexes: []
     }
 
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
@@ -24,7 +25,7 @@ class Instance extends Component {
     this.handleEndGame = this.handleEndGame.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
-    this.shuffle = this.shuffle.bind(this);
+    this.getRandomIdxs = this.getRandomIdxs.bind(this);
   }
 
   componentDidMount() {
@@ -130,34 +131,31 @@ class Instance extends Component {
     )
   }
 
-  shuffle(max) {
-
-    function randomInt(max) {
-      return Math.floor(Math.random() * Math.floor(max))
-    }
-
-    let randomArr = [];
-
-    while (randomArr.length < 5) {
-      let currentRandom = randomInt(max)
-      console.log(currentRandom)
-      if (randomArr.indexOf(currentRandom) === -1) {
-        randomArr.push(currentRandom)
+  getRandomIdxs() {
+    const { tracks } = this.props;
+    let max = tracks.length;
+    let randomIdxs = [];
+    while (randomIdxs.length < 5) {
+      let randomIdx = Math.floor(Math.random()*max)
+      if (randomIdxs.indexOf(randomIdx) === -1) {
+        randomIdxs.push(randomIdx);
       }
     }
-    return randomArr;
+    return randomIdxs;
   }
 
   render() {
 
     const { user, tracks } = this.props;
     const { currentCorrect, currentRounds } = this.state;
-    // let randomTracks = [];
-    // let randomTrackIndexes = this.shuffle(tracks.length);
-    // console.log('random track indexes', randomTrackIndexes)
-    // for (let i = 0; i < 5; i++) {
-    //   randomTracks.push(tracks[randomTrackIndexes[i]])
-    // }
+    let randomIdxs;
+    //need to check for tracks.length because getRandomIdxs() was being called before the store was updated
+    tracks.length ?
+      randomIdxs = this.getRandomIdxs()
+      : console.log('STILL FETCHING TRACKS')
+    console.log('RANDOM IDXS', randomIdxs)
+
+
 
     return (
       <div className="instance">
@@ -204,3 +202,22 @@ const mapState = ({ user, tracks }) => {
 const mapDispatch = ({ fetchTracks, fetchMoreTracks, removeTracks })
 
 export default connect(mapState, mapDispatch)(Instance);
+
+
+// shuffle(max) {
+
+//   function randomInt(max) {
+//     return Math.floor(Math.random() * Math.floor(max))
+//   }
+
+//   let randomArr = [];
+
+//   while (randomArr.length < 5) {
+//     let currentRandom = randomInt(max)
+//     console.log(currentRandom)
+//     if (randomArr.indexOf(currentRandom) === -1) {
+//       randomArr.push(currentRandom)
+//     }
+//   }
+//   return randomArr;
+// }
