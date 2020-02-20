@@ -25,7 +25,8 @@ class Instance extends Component {
     this.handleEndGame = this.handleEndGame.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
-    this.getRandomIdxs = this.getRandomIdxs.bind(this);
+    this.getRandomIndexes = this.getRandomIndexes.bind(this);
+    this.getRandomTracks = this.getRandomTracks.bind(this);
   }
 
   componentDidMount() {
@@ -99,14 +100,6 @@ class Instance extends Component {
 
   async handleFetchTracks() {
     const { fetchTracks } = this.props;
-    // return Promise.all([
-    //   fetchTracks('RecentlyPlayedTracks'),
-    //   fetchTracks('TopTracks'),
-    //   fetchTracks('SavedTracks'),
-    //   fetchTracks('SavedAlbums'),
-    // ])
-    // .then(() => console.log('resolved'))
-    // .catch(() => console.log('failed'))
     await fetchTracks('RecentlyPlayedTracks')
     await fetchTracks('TopTracks')
     await fetchTracks('SavedTracks')
@@ -145,27 +138,43 @@ class Instance extends Component {
     )
   }
 
-  getRandomIdxs() {
+  getRandomIndexes() {
     const { tracks } = this.props;
     let max = tracks.length;
-    let randomIdxs = [];
-    while (randomIdxs.length < 5) {
+    let randomIndexes = [];
+    while (randomIndexes.length < 5) {
       let randomIdx = Math.floor(Math.random()*max)
-      if (randomIdxs.indexOf(randomIdx) === -1) {
-        randomIdxs.push(randomIdx);
+      if (randomIndexes.indexOf(randomIdx) === -1) {
+        randomIndexes.push(randomIdx);
       }
     }
-    return randomIdxs;
+    return randomIndexes;
+  }
+
+  getRandomTracks(indexes) {
+    const { tracks } = this.props;
+    let randomTracks = [];
+    for (let i = 0; i < indexes.length; i++) {
+      randomTracks.push(tracks[indexes[i]])
+    }
+    return randomTracks;
   }
 
   render() {
     const { user, tracks } = this.props;
     const { currentCorrect, currentRounds } = this.state;
-    let randomIdxs;
+    let randomTracks = [];
+    let randomIndexes = [];
+
     this.state.tracksLoaded === true ?
-      randomIdxs = this.getRandomIdxs()
-      : console.log('Waiting for all fetched tracks to dispatch to store before generating random indexes');
-      console.log('RANDOM INDEXES', randomIdxs);
+    randomIndexes = this.getRandomIndexes()
+    : console.log('Waiting for all fetched tracks to dispatch to store before generating random indexes');
+    console.log('RANDOM INDEXES', randomIndexes);
+
+    randomIndexes.length ?
+    randomTracks = this.getRandomTracks(randomIndexes)
+    : console.log('Error pulling random tracks')
+    console.log('RANDOM TRACKS', randomTracks);
 
     return (
       <div className="instance">
@@ -182,7 +191,7 @@ class Instance extends Component {
         </div>
 
         <Tracklist
-          randomTracks={tracks}
+          randomTracks={randomTracks}
         />
 
         <Buttons
