@@ -204,6 +204,7 @@ class Instance extends Component {
         }
 
         <Tracklist
+          currentTrack={currentTrack}
           randomTracks={randomTracks}
         />
 
