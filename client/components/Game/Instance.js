@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import history from '../../history'
 import Script from 'react-load-script';
 import axios from 'axios';
-import { fetchTracks, removeTracks, fetchPlayer, addPlayer } from '../../store';
+import { fetchTracks, removeTracks, fetchPlayer, addPlayer, resetScore } from '../../store';
 import { Tracklist, Buttons, Score } from '../';
 
 class Instance extends Component {
@@ -14,8 +14,6 @@ class Instance extends Component {
     this.state = {
       scriptLoaded: false,
       tracksLoaded: false,
-      currentCorrect: 0,
-      currentRounds: 0,
     }
 
     this.handleLoadSuccess = this.handleLoadSuccess.bind(this);
@@ -108,8 +106,9 @@ class Instance extends Component {
 
   handleEndGame(event) {
     event.preventDefault();
-    const { removeTracks } = this.props;
+    const { removeTracks, resetScore } = this.props;
     removeTracks();
+    resetScore();
     history.push('/home')
   }
 
@@ -159,8 +158,9 @@ class Instance extends Component {
   }
 
   render() {
-    const { user, tracks } = this.props;
-    const { currentCorrect, currentRounds } = this.state;
+    const { user, instanceScore, tracks } = this.props;
+    let currentCorrect = instanceScore.score
+    let currentRounds = instanceScore.rounds
     let randomIndexes = [];
     let randomTracks = [];
     let currentTrackIndex = [];
@@ -226,8 +226,8 @@ class Instance extends Component {
   }
 }
 
-const mapState = ({ user, tracks, player }) => ({user, tracks, player });
+const mapState = ({ user, instanceScore, tracks, player }) => ({user, instanceScore, tracks, player });
 
-const mapDispatch = ({ fetchTracks, removeTracks, fetchPlayer, addPlayer });
+const mapDispatch = ({ fetchTracks, removeTracks, fetchPlayer, addPlayer, resetScore });
 
 export default connect(mapState, mapDispatch)(Instance);

@@ -3,10 +3,11 @@ import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import user from './user';
+import instanceScore from './instanceScore';
 import tracks from './tracks';
 import player from './player'
 
-const reducer = combineReducers({ user, tracks, player })
+const reducer = combineReducers({ user, score, tracks, player })
 
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))
@@ -15,6 +16,7 @@ const middleware = composeWithDevTools(
 const store = createStore(reducer, middleware)
 
 export * from './user';
+export * from './instanceScore';
 export * from './tracks';
 export * from './player';
 
