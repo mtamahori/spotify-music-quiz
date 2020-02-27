@@ -30,14 +30,14 @@ class Tracklist extends Component {
         let newUserCorrect = ++user.user.correct;
         newInstanceScore.correct = newInstanceCorrect;
         newUser.correct = newUserCorrect;
+        updateScore(newInstanceScore)
+        updateUser(newUser)
       }
 
       else {
-        console.log('NOPE')
+        ++newInstanceRounds;
+        ++newUserRounds;
       }
-
-      updateScore(newInstanceScore)
-      updateUser(newUser)
   }
 
     render() {
