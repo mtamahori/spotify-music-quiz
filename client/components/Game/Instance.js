@@ -159,7 +159,7 @@ class Instance extends Component {
 
   render() {
     const { user, instanceScore, tracks } = this.props;
-    let currentCorrect = instanceScore.score
+    let currentCorrect = instanceScore.correct
     let currentRounds = instanceScore.rounds
     let randomIndexes = [];
     let randomTracks = [];
@@ -168,17 +168,17 @@ class Instance extends Component {
 
     if (this.state.tracksLoaded === true) {
       randomIndexes = this.getRandomIndexes(tracks.length, 5)
-      console.log('RANDOM INDEXES', randomIndexes);
+      // console.log('RANDOM INDEXES', randomIndexes);
     }
 
     if (randomIndexes.length) {
       randomTracks = this.getRandomTracks(randomIndexes)
-      console.log('RANDOM TRACKS', randomTracks);
+      // console.log('RANDOM TRACKS', randomTracks);
     }
 
     if (randomTracks.length) {
       currentTrackIndex = this.getRandomIndexes(randomTracks.length, 1)
-      console.log('CURRENT TRACK INDEX', currentTrackIndex);
+      // console.log('CURRENT TRACK INDEX', currentTrackIndex);
     }
 
     if (currentTrackIndex.length) {

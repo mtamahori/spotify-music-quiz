@@ -7,7 +7,7 @@ import instanceScore from './instanceScore';
 import tracks from './tracks';
 import player from './player'
 
-const reducer = combineReducers({ user, score, tracks, player })
+const reducer = combineReducers({ user, instanceScore, tracks, player })
 
 const middleware = composeWithDevTools(
   applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }))

@@ -30,7 +30,7 @@ export const me = () => async dispatch => {
 
 export const updateUser = (user) => dispatch => {
   axios
-    .put(`/api/users/${user.id}`, user)
+    .put(`/api/user/${user.id}`, user)
     .then(res => dispatch(editUser(res.data)))
     .catch(err => console.error('Updating user info unsuccessful', err))
 }

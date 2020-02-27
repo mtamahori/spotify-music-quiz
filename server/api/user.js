@@ -11,7 +11,8 @@ router.put('/:id', function(req, res, next) {
     return user.update(req.body)
   })
   .then(updatedUser => {
-    res.status(200).json(updatedUser)
+    req.user.user = updatedUser
+    res.status(200).json(req.user)
   })
   .catch(next)
 })
