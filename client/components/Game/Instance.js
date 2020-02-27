@@ -42,6 +42,9 @@ class Instance extends Component {
         console.log('tracksloaded?', this.state.tracksLoaded)
       }
     })
+    .then(() => {
+
+    })
   }
 
   handleLoadSuccess() {
@@ -60,7 +63,7 @@ class Instance extends Component {
     player.addListener('playback_error', ({ message }) => { console.error(message); });
 
     player.addListener('player_state_changed', state => {
-      console.log(state);
+      state && console.log(state);
     });
 
     player.addListener('ready', ({ device_id }) => {
@@ -110,6 +113,12 @@ class Instance extends Component {
     const { removeTracks, resetScore } = this.props;
     removeTracks();
     resetScore();
+
+    const { player } = this.props;
+    const pauseParams = ({ playerInstance: player })
+    axios
+      .post('/api/spotify/pause', pauseParams)
+      .catch(err => console.error('Pausing track unsuccessful', err))
     history.push('/home')
   }
 
@@ -205,6 +214,7 @@ class Instance extends Component {
         }
 
         <Tracklist
+          player={this.props.player}
           currentTrack={currentTrack}
           randomTracks={randomTracks}
         />

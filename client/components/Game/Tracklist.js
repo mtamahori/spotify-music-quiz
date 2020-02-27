@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { updateScore, updateUser } from '../../store';
 import { List, Button } from 'semantic-ui-react';
@@ -26,6 +27,12 @@ class Tracklist extends Component {
 
       if (selectedTrack === correctTrack) {
         console.log('CORRECT!')
+        const { player } = this.props;
+        const pauseParams = ({ playerInstance: player })
+        axios
+          .post('/api/spotify/pause', pauseParams)
+          .catch(err => console.error('Pausing track unsuccessful', err))
+
         let newInstanceCorrect = ++instanceScore.correct;
         let newUserCorrect = ++user.user.correct;
         newInstanceScore.correct = newInstanceCorrect;
