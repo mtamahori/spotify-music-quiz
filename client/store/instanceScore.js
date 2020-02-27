@@ -14,7 +14,7 @@ export default function(state = defaultScore, action) {
       return action.score
 
     case RESET_SCORE:
-      return defaultScore;
+      return { correct: 0, rounds: 0 };
 
     default:
       return state;

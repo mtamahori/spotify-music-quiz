@@ -34,6 +34,7 @@ class Instance extends Component {
         this.handleLoadSuccess();
       }
     }
+    this.props.resetScore();
     this.handleFetchTracks()
     .then(() => {
       if (this._isMounted) {
