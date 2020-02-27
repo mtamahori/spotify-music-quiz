@@ -16,28 +16,29 @@ class Tracklist extends Component {
       let selectedTrack = data.children[0];
       let correctTrack = currentTrack.name;
 
+      let newInstanceScore = instanceScore;
+      let newInstanceRounds = ++instanceScore.rounds;
+      newInstanceScore.rounds = newInstanceRounds;
+
+      let newUser = user.user;
+      let newUserRounds = ++user.user.rounds;
+      newUser.rounds = newUserRounds;
+
       if (selectedTrack === correctTrack) {
         console.log('CORRECT!')
-        let newInstanceCorrect = instanceScore.correct + 1;
-        let newInstanceRounds = instanceScore.rounds + 1;
-        let newInstanceScore = instanceScore;
+        let newInstanceCorrect = ++instanceScore.correct;
+        let newUserCorrect = ++user.user.correct;
         newInstanceScore.correct = newInstanceCorrect;
-        newInstanceScore.rounds = newInstanceRounds;
-        updateScore(newInstanceScore)
-
-        let newUserCorrect = user.user.correct + 1;
-        let newUserRounds = user.user.rounds + 1;
-        let newUser = user.user;
         newUser.correct = newUserCorrect;
-        newUser.rounds = newUserRounds;
-        console.log('NEW USER', newUser)
-        updateUser(newUser)
       }
 
       else {
         console.log('NOPE')
       }
-    }
+
+      updateScore(newInstanceScore)
+      updateUser(newUser)
+  }
 
     render() {
       const { randomTracks } = this.props;

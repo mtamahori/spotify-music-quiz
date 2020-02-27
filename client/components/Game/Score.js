@@ -5,8 +5,8 @@ const Score = (props) => {
 
   return (
     <div className="scores">
-    <h4>Current score: {currentCorrect} / {currentRounds}</h4>
-    <h4>All-time score: {user.user.correct} / {user.user.rounds} </h4>
+    <h4>Current score: {currentCorrect} / {currentRounds} = {Math.round(((currentCorrect / currentRounds) + Number.EPSILON) * 1000) / 1000}</h4>
+    <h4>All-time score: {user.user.correct} / {user.user.rounds} = {Math.round(((user.user.correct / user.user.rounds) + Number.EPSILON) * 1000) / 1000}</h4>
     </div>
     )
   }
