@@ -2,13 +2,18 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { updateScore, updateUser } from '../../store';
-import { List, Button, Loader, Segment, Dimmer } from 'semantic-ui-react';
+import { List, Button, Loader, Message, Form } from 'semantic-ui-react';
 
 class Tracklist extends Component {
     constructor(props) {
       super(props);
 
+      this.state = {
+        answerBool: null
+      }
+
       this.handleSelect = this.handleSelect.bind(this);
+
     }
 
     handleSelect = (event, data) => {
@@ -27,6 +32,12 @@ class Tracklist extends Component {
 
       if (selectedTrack === correctTrack) {
         console.log('CORRECT!')
+        this.setState({ answerBool: true })
+
+        setTimeout(() => {
+          this.setState({ answerBool: null })
+        }, 1000)
+
         const { player } = this.props;
         const pauseParams = ({ playerInstance: player })
         axios
@@ -42,10 +53,17 @@ class Tracklist extends Component {
       }
 
       else {
+        console.log('INCORRECT!')
+        this.setState({ answerBool: false })
+
+        setTimeout(() => {
+          this.setState({ answerBool: null })
+        }, 1000)
+
         ++newInstanceRounds;
         ++newUserRounds;
       }
-  }
+    }
 
     render() {
       const { randomTracks } = this.props;
@@ -53,33 +71,25 @@ class Tracklist extends Component {
         <div className="trackList">
         {
           (randomTracks[0] !== undefined) ?
-          <List selection={true}>
-            <List.Item
-              as={Button}
-              onClick={(event, data) => this.handleSelect(event, data)}>
-                {randomTracks[0].name} - {randomTracks[0].artists[0].name}
-            </List.Item>
-            <List.Item
-              as={Button}
-              onClick={(event, data) => this.handleSelect(event, data)}>
-                {randomTracks[1].name} - {randomTracks[1].artists[0].name}
-            </List.Item>
-            <List.Item
-              as={Button}
-              onClick={(event, data) => this.handleSelect(event, data)}>
-                {randomTracks[2].name} - {randomTracks[2].artists[0].name}
-            </List.Item>
-            <List.Item
-              as={Button}
-              onClick={(event, data) => this.handleSelect(event, data)}>
-                {randomTracks[3].name} - {randomTracks[3].artists[0].name}
-            </List.Item>
-            <List.Item
-              as={Button}
-              onClick={(event, data) => this.handleSelect(event, data)}>
-                {randomTracks[4].name} - {randomTracks[4].artists[0].name}
-            </List.Item>
-          </List>
+          <Form success={this.state.answerBool === true} error={this.state.answerBool === false}>
+            <Form.Button onClick={(event, data) => this.handleSelect(event, data)}>
+              {randomTracks[0].name} - {randomTracks[0].artists[0].name}
+            </Form.Button>
+            <Form.Button onClick={(event, data) => this.handleSelect(event, data)}>
+              {randomTracks[1].name} - {randomTracks[1].artists[0].name}
+            </Form.Button>
+            <Form.Button onClick={(event, data) => this.handleSelect(event, data)}>
+              {randomTracks[2].name} - {randomTracks[2].artists[0].name}
+            </Form.Button>
+            <Form.Button onClick={(event, data) => this.handleSelect(event, data)}>
+              {randomTracks[3].name} - {randomTracks[3].artists[0].name}
+            </Form.Button>
+            <Form.Button onClick={(event, data) => this.handleSelect(event, data)}>
+              {randomTracks[4].name} - {randomTracks[4].artists[0].name}
+            </Form.Button>
+            <Message success header="Correct!"/>
+            <Message error header="Nope!"/>
+          </Form>
           :
           <Loader active inline="centered">Loading Tracks</Loader>
         }
