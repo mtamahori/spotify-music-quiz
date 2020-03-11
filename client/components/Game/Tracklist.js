@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { updateScore, updateUser } from '../../store';
-import { List, Button } from 'semantic-ui-react';
+import { List, Button, Loader, Segment, Dimmer } from 'semantic-ui-react';
 
 class Tracklist extends Component {
     constructor(props) {
@@ -81,7 +81,7 @@ class Tracklist extends Component {
             </List.Item>
           </List>
           :
-          <h3>LOADING</h3>
+          <Loader active inline="centered">Loading Tracks</Loader>
         }
         </div>
       )

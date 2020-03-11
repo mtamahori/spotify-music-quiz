@@ -63,7 +63,7 @@ class Instance extends Component {
     player.addListener('playback_error', ({ message }) => { console.error(message); });
 
     player.addListener('player_state_changed', state => {
-      state && console.log(state);
+      console.log('Player state changed', state);
     });
 
     player.addListener('ready', ({ device_id }) => {
